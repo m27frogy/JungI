@@ -27,10 +27,6 @@ require_relative "./paulhus"
 value = `tput cols`.chomp
 if value.to_i then
 	WIDTH = value.to_i
-	if WIDTH < 80 then
-		STDERR.puts "Shell is too small!  Shell minimum width must be 80 characters!"
-		exit
-	end
 else
 	WIDTH = 80
 end
@@ -104,6 +100,7 @@ ARGV.options do |opts|
 	opts.on("-s","Use Delroy L. Paulhus' SD3") do |v|
 		options[:sd3test] = true
 	end
+
 	opts.separator ""
 	opts.separator "Modifiers:"
 	opts.on("-r","--randomize","Automatically fills in random answers") do |v|
@@ -116,6 +113,30 @@ ARGV.options do |opts|
 	options[:helper] = opts.help
 	
 	opts.parse!
+end
+if WIDTH < 80 then
+	STDERR.puts options[:helper] + "\n"
+	STDERR.puts "Minimum shell width is 80 characters"
+	exit
+end
+tests = 0
+if options[:bigfivebroad50] then
+	tests += 1
+end
+if options[:bigfivebroad100] then
+	tests += 1
+end
+if options[:oejts] then
+	tests += 1
+end
+if options[:sd3test] then
+	tests += 1
+end
+
+if tests > 1 then
+	STDERR.puts options[:helper] + "\n"
+	STDERR.puts "Only use one test argument at a time"
+	exit
 end
 
 if options[:oejts] then
