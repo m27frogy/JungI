@@ -121,16 +121,16 @@ END_FILE
 	
 	def result()
 		raise "Not ready yet!" if not self.finished?
-		extraversion = self.Q4 + self.Q29 + self.Q13 + self.Q27 + self.Q31
-			- self.Q34 - self.Q38 - self.Q47 - self.Q18 - self.Q10
-		agreeableness = self.Q25 + self.Q49 + self.Q33 + self.Q19 + self.Q12
-			+ self.Q44 - self.Q1 - self.Q42 - self.Q23 - self.Q32
-		conscientiousness = self.Q48 + self.Q41 + self.Q26 + self.Q40 + self.Q46
-			+ self.Q9 - self.Q7 - self.Q17 - self.Q2 - self.Q39
-		emotional_stability = self.Q37 + self.Q50 - self.Q21 - self.Q28 - self.Q15
-			- self.Q14 - self.Q5 - self.Q24 - self.Q3 - self.Q6
-		intellect = self.Q36 + self.Q11 + self.Q22 + self.Q8 + self.Q45 + self.Q35
-			+ self.Q16 - self.Q30 - self.Q43 - self.Q20
+		extraversion = self.Q4 + self.Q29 + self.Q13 + self.Q27 + self.Q31 + 
+			Question::Answer.reverse_scale(self.Q34) + Question::Answer.reverse_scale(self.Q38) + Question::Answer.reverse_scale(self.Q47) + Question::Answer.reverse_scale(self.Q18) + Question::Answer.reverse_scale(self.Q10) 
+		agreeableness = self.Q25 + self.Q49 + self.Q33 + self.Q19 + self.Q12 + 
+			self.Q44 + Question::Answer.reverse_scale(self.Q1) + Question::Answer.reverse_scale(self.Q42) + Question::Answer.reverse_scale(self.Q23) + Question::Answer.reverse_scale(self.Q32) 
+		conscientiousness = self.Q48 + self.Q41 + self.Q26 + self.Q40 + self.Q46 +
+			self.Q9 + Question::Answer.reverse_scale(self.Q7) + Question::Answer.reverse_scale(self.Q17) + Question::Answer.reverse_scale(self.Q2) + Question::Answer.reverse_scale(self.Q39) 
+		emotional_stability = self.Q37 + self.Q50 + Question::Answer.reverse_scale(self.Q21) + Question::Answer.reverse_scale(self.Q28) + Question::Answer.reverse_scale(self.Q15) -
+			self.Q14 + Question::Answer.reverse_scale(self.Q5) + Question::Answer.reverse_scale(self.Q24) + Question::Answer.reverse_scale(self.Q3) + Question::Answer.reverse_scale(self.Q6) 
+		intellect = self.Q36 + self.Q11 + self.Q22 + self.Q8 + self.Q45 + self.Q35 +
+			self.Q16 + Question::Answer.reverse_scale(self.Q30) + Question::Answer.reverse_scale(self.Q43) + Question::Answer.reverse_scale(self.Q20) 
 		
 		return extraversion, agreeableness, conscientiousness, emotional_stability, intellect
 	end
@@ -254,16 +254,16 @@ END_FILE
 	
 	def result()
 		raise "Not ready yet!" if not self.finished?
-		extraversion = self.Q61 + self.Q26 + self.Q10 + self.Q1 + self.Q68 + self.Q9 + self.Q82 + self.Q3 + self.Q18 + self.Q20
-			- self.Q40 -  self.Q77 - self.Q5 - self.Q80 - self.Q12 - self.Q74 - self.Q23 - self.Q88 - self.Q75 - self.Q85
-		agreeableness = self.Q71 + self.Q55 + self.Q76 + self.Q100 + self.Q58 + self.Q84 + self.Q69 + self.Q86 + self.Q78
-			+ self.Q56 + self.Q42 + self.Q34 + self.Q83 + self.Q44 - self.Q24 - self.Q59 - self.Q65 - self.Q47 - self.Q70 - self.Q91
-		conscientiousness = self.Q98 + self.Q93 + self.Q64 + self.Q62 + self.Q11 + self.Q46 + self.Q99 + self.Q50
-			+ self.Q36 + self.Q25 + self.Q2 - self.Q37 - self.Q63 - self.Q8 - self.Q92 - self.Q6 - self.Q32 - self.Q33 - self.Q57 - self.Q13
-		emotional_stability = self.Q53 + self.Q87 + self.Q89 + self.Q94 + self.Q35 - self.Q48 - self.Q73 - self.Q51
-			- self.Q43 - self.Q4 - self.Q38 - self.Q27 - self.Q21 - self.Q67 - self.Q7 - self.Q45 - self.Q95 - self.Q66 - self.Q54 - self.Q30
-		intellect = self.Q97 + self.Q22 + self.Q14 + self.Q79 + self.Q15 + self.Q31 + self.Q90 + self.Q29 + self.Q17 + self.Q28
-			+ self.Q19 + self.Q41 + self.Q72 - self.Q96 - self.Q52 - self.Q60 - self.Q16 - self.Q39 - self.Q81 - self.Q49
+		extraversion = self.Q61 + self.Q26 + self.Q10 + self.Q1 + self.Q68 + self.Q9 + self.Q82 + self.Q3 + self.Q18 + self.Q20 -
+			self.Q40 -  self.Q77 + Question::Answer.reverse_scale(self.Q5) + Question::Answer.reverse_scale(self.Q80) + Question::Answer.reverse_scale(self.Q12) + Question::Answer.reverse_scale(self.Q74) + Question::Answer.reverse_scale(self.Q23) + Question::Answer.reverse_scale(self.Q88) + Question::Answer.reverse_scale(self.Q75) + Question::Answer.reverse_scale(self.Q85) 
+		agreeableness = self.Q71 + self.Q55 + self.Q76 + self.Q100 + self.Q58 + self.Q84 + self.Q69 + self.Q86 + self.Q78 + 
+			self.Q56 + self.Q42 + self.Q34 + self.Q83 + self.Q44 + Question::Answer.reverse_scale(self.Q24) + Question::Answer.reverse_scale(self.Q59) + Question::Answer.reverse_scale(self.Q65) + Question::Answer.reverse_scale(self.Q47) + Question::Answer.reverse_scale(self.Q70) + Question::Answer.reverse_scale(self.Q91) 
+		conscientiousness = self.Q98 + self.Q93 + self.Q64 + self.Q62 + self.Q11 + self.Q46 + self.Q99 + self.Q50 +
+			self.Q36 + self.Q25 + self.Q2 + Question::Answer.reverse_scale(self.Q37) + Question::Answer.reverse_scale(self.Q63) + Question::Answer.reverse_scale(self.Q8) + Question::Answer.reverse_scale(self.Q92) + Question::Answer.reverse_scale(self.Q6) + Question::Answer.reverse_scale(self.Q32) + Question::Answer.reverse_scale(self.Q33) + Question::Answer.reverse_scale(self.Q57) + Question::Answer.reverse_scale(self.Q13) 
+		emotional_stability = self.Q53 + self.Q87 + self.Q89 + self.Q94 + self.Q35 + Question::Answer.reverse_scale(self.Q48) + Question::Answer.reverse_scale(self.Q73) + Question::Answer.reverse_scale(self.Q51) -
+			self.Q43 + Question::Answer.reverse_scale(self.Q4) + Question::Answer.reverse_scale(self.Q38) + Question::Answer.reverse_scale(self.Q27) + Question::Answer.reverse_scale(self.Q21) + Question::Answer.reverse_scale(self.Q67) + Question::Answer.reverse_scale(self.Q7) + Question::Answer.reverse_scale(self.Q45) + Question::Answer.reverse_scale(self.Q95) + Question::Answer.reverse_scale(self.Q66) + Question::Answer.reverse_scale(self.Q54) + Question::Answer.reverse_scale(self.Q30) 
+		intellect = self.Q97 + self.Q22 + self.Q14 + self.Q79 + self.Q15 + self.Q31 + self.Q90 + self.Q29 + self.Q17 + self.Q28 +
+			self.Q19 + self.Q41 + self.Q72 + Question::Answer.reverse_scale(self.Q96) + Question::Answer.reverse_scale(self.Q52) + Question::Answer.reverse_scale(self.Q60) + Question::Answer.reverse_scale(self.Q16) + Question::Answer.reverse_scale(self.Q39) + Question::Answer.reverse_scale(self.Q81) + Question::Answer.reverse_scale(self.Q49) 
 		
 		return extraversion, agreeableness, conscientiousness, emotional_stability, intellect
 	end

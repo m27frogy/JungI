@@ -22,6 +22,7 @@ $Randomize = false
 require_relative "./classes"
 require_relative "./oejts"
 require_relative "./bigfive"
+require_relative "./paulhus"
 
 value = `tput cols`.chomp
 if value.to_i then
@@ -91,14 +92,17 @@ ARGV.options do |opts|
 	
 	opts.separator ""
 	opts.separator "Tests:"
-	opts.on("-j","Use OEJTS 1.2 test") do |v|
-		options[:oejts] = true
-	end
 	opts.on("-b","Use IPIP Big Five Broad 50 test") do |v|
 		options[:bigfivebroad50] = true
 	end
 	opts.on("-B","Use IPIP Big Five Broad 100 test") do |v|
 		options[:bigfivebroad100] = true
+	end
+	opts.on("-j","Use OEJTS 1.2 test") do |v|
+		options[:oejts] = true
+	end
+	opts.on("-s","Use Delroy L. Paulhus' SD3") do |v|
+		options[:sd3test] = true
 	end
 	opts.separator ""
 	opts.separator "Modifiers:"
@@ -130,7 +134,7 @@ if options[:oejts] then
 	puts("Designation".center WIDTH,"-")
 	puts(desig.center WIDTH)
 	Line()
-	DisplayDoc(OEJTSTest.parse_variants(desig,iev,snv,ftv,jpv))
+	DisplayDoc(OEJTSTest.parse_result(desig,iev,snv,ftv,jpv))
 	Line()
 elsif options[:bigfivebroad50] then
 	currentTest = BigFiveBroad50Test.new
@@ -165,6 +169,21 @@ elsif options[:bigfivebroad100] then
 	DisplayDoc("Extraversion: #{extraversion} Agreeableness: #{agreeableness}\n" +
 		"Conscientiousness: #{conscientiousness} Emotional Stability: #{emotional_stability}\n" +
 		"Intellect: #{intellect}")
+	Line()
+elsif options[:sd3test] then
+	currentTest = SD3Test.new
+	Clr()
+	DisplayDoc(SD3Test::DOC)
+	Line()
+	
+	27.times do  |int|
+		puts "Question #{int+1}".center WIDTH
+		currentTest.set_answer int,AskScale(currentTest.question int)
+	end
+	mach, narc, psycho = currentTest.result
+	puts("Test Complete".center WIDTH)
+	Line()
+	DisplayDoc(SD3Test.parse_result(mach, narc, psycho))
 	Line()
 else
 	puts options[:helper]

@@ -41,6 +41,15 @@ module Question
 			end
 		end
 		
+		def self.reverse_scale(value)
+			raise "#{type} is not a proper scale!" if not Question::Answer.scale?(value)
+			if value == 1 then; return 5; end
+			if value == 2 then; return 4; end
+			if value == 3 then; return 3; end
+			if value == 4 then; return 2; end
+			if value == 5 then; return 1; end
+		end
+		
 		def self.follows_type?(type,value)
 			if type == Question::Type::YESORNO then
 				return Question::Answer.yes_or_no?(value)
@@ -143,5 +152,8 @@ class ScaleTest < Test
 		else
 			"You're hard to figure out."
 		end
+	end
+	
+	def self.reverse()
 	end
 end

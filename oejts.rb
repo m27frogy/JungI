@@ -112,7 +112,7 @@ END_FILE
 		return desig, iev, snv, ftv, jpv
 	end
 	
-	def self.parse_variants(desig,iev,snv,ftv,jpv)
+	def self.parse_result(desig,iev,snv,ftv,jpv)
 		ending = ""
 		
 		if iev.between?(0,1) then
