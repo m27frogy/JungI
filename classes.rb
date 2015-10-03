@@ -118,6 +118,21 @@ class ScaleTest < Test
 		@answers[index] = value
 	end
 	
+	def randomize!()
+		self.class.const_get(:QUESTIONS).length.times do |num|
+			self.set_answer(num,rand(1..5))
+		end
+		nil
+	end
+	
+	def method_missing(name,*args)
+		if name[0] == "Q" and (name.length == 2 or name.length == 3 or name.length == 4) and name[1,name.length-1].to_i >= 1 and name[1,name.length-1].to_i <= self.class.const_get(:QUESTIONS).length then
+			return @answers[name[1,name.length-1].to_i-1]
+		else
+			super
+		end
+	end
+	
 	def result()
 		raise "Not ready yet!" if not self.finished?
 		val = @answers[1] - @answers[0]

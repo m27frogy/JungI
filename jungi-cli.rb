@@ -17,32 +17,49 @@
 =end
 
 require "optparse"
+
+$Randomize = false
 require_relative "./classes"
 require_relative "./oejts"
+require_relative "./bigfive"
+
 value = `tput cols`.chomp
 if value.to_i then
 	WIDTH = value.to_i
+	if WIDTH < 80 then
+		STDERR.puts "Shell is too small!  Shell minimum width must be 80 characters!"
+		exit
+	end
 else
 	WIDTH = 80
 end
 
-start = " |1|2|3|4|5| ".center WIDTH
+start = (" |1|2|3|4|5| ".center WIDTH)
 Part1, Center, Part2 = start.partition(" |1|2|3|4|5| ")
 
 def AskScale(str)
-	partt1,partt2 = Part1.dup, Part2.dup
 	list1,list2 = str.split("|")
-	
-	partt1[Part1.length-(list1.length),Part1.length-1] = list1
-	partt2[0,Part1.length-1] = list2
-	
-	puts partt1 + Center + partt2
-	result = nil
-	while not Question::Answer.scale? result do
-		print "> "
-		result = gets.chomp.to_i
+	if list2 then
+		partt1,partt2 = Part1.dup, Part2.dup
+		partt1[Part1.length-(list1.length),Part1.length-1] = list1
+		partt2[0,Part1.length-1] = list2
+		puts partt1 + Center + partt2
+	else
+		puts((list1 + " |1|2|3|4|5| ").center WIDTH)
 	end
-	return result
+	
+	if not $Randomize then
+		result = nil
+		while not Question::Answer.scale? result do
+			print "> "
+			result = gets.chomp.to_i
+		end
+		return result
+	else
+		int = rand(1..5)
+		puts "> #{int}"
+		return int
+	end
 end
 
 def PadDoc(doc)
@@ -54,99 +71,43 @@ def PadDoc(doc)
 	return out
 end
 
-def ParseVariants(desig,iev,snv,ftv,jpv)
-	ending = ""
-	
-	if iev.between?(0,1) then
-		if desig[0] == "E" then
-			ending << "Lukewarm Extraversion, "
-		else
-			ending << "Lukewarm Intraversion, "
-		end
-	elsif iev < 4 then
-		if desig[0] == "E" then
-			ending << "Weak(#{iev}) Extraversion, "
-		else
-			ending << "Weak(#{iev}) Intraversion, "
-		end
-	else
-		if desig[0] == "E" then
-			ending << "Strong(#{iev}) Extraversion, "
-		else
-			ending << "Strong(#{iev}) Intraversion, "
-		end
+def DisplayDoc(doc)
+	PadDoc(doc).each do |line|
+		puts line
 	end
-	
-	if snv.between?(0,1) then
-		if desig[1] == "S" then
-			ending << "Lukewarm Sensing\n"
-		else
-			ending << "Lukewarm Intuition\n"
-		end
-	elsif snv < 4 then
-		if desig[1] == "S" then
-			ending << "Weak(#{snv}) Sensing\n"
-		else
-			ending << "Weak(#{snv}) Intuition\n"
-		end
-	else
-		if desig[1] == "S" then
-			ending << "Strong(#{snv}) Sensing\n"
-		else
-			ending << "Strong(#{snv}) Intuition\n"
-		end
-	end
-	
-	if ftv.between?(0,1) then
-		if desig[2] == "F" then
-			ending << "Lukewarm Feeling, "
-		else
-			ending << "Lukewarm Thinking, "
-		end
-	elsif ftv < 4 then
-		if desig[2] == "F" then
-			ending << "Weak(#{ftv}) Feeling, "
-		else
-			ending << "Weak(#{ftv}) Thinking, "
-		end
-	else
-		if desig[2] == "F" then
-			ending << "Strong(#{ftv}) Feeling, "
-		else
-			ending << "Strong(#{ftv}) Thinking, "
-		end
-	end
-	
-	if jpv.between?(0,1) then
-		if desig[3] == "J" then
-			ending << "Lukewarm Judging"
-		else
-			ending << "Lukewarm Perceiving"
-		end
-	elsif jpv < 4 then
-		if desig[3] == "J" then
-			ending << "Weak(#{jpv}) Judging"
-		else
-			ending << "Weak(#{jpv}) Perceiving"
-		end
-	else
-		if desig[3] == "J" then
-			ending << "Strong(#{jpv}) Judging"
-		else
-			ending << "Strong(#{jpv}) Perceiving"
-		end
-	end
-	
-	return ending
+end
+
+def Line()
+	WIDTH.times { print "-" }; print "\n"
+end
+
+def Clr()
+	system "clear" or system "cls"
 end
 
 options = {}
 ARGV.options do |opts|
 	opts.banner = "Usage: jungi-cli [options]"
 	
+	opts.separator ""
+	opts.separator "Tests:"
 	opts.on("-j","Use OEJTS 1.2 test") do |v|
 		options[:oejts] = true
 	end
+	opts.on("-b","Use IPIP Big Five Broad 50 test") do |v|
+		options[:bigfivebroad50] = true
+	end
+	opts.on("-B","Use IPIP Big Five Broad 100 test") do |v|
+		options[:bigfivebroad100] = true
+	end
+	opts.separator ""
+	opts.separator "Modifiers:"
+	opts.on("-r","--randomize","Automatically fills in random answers") do |v|
+		$Randomize = true
+	end
+	opts.separator ""
+	opts.separator "Common options:"
+	opts.on_tail("-h","--help", "Display this help and exit")
 	
 	options[:helper] = opts.help
 	
@@ -155,11 +116,9 @@ end
 
 if options[:oejts] then
 	currentTest = OEJTSTest.new
-	system "clear" or system "cls"
-	PadDoc(OEJTSTest::DOC).each do |line|
-		puts line
-	end
-	WIDTH.times { print "-" }; print "\n"
+	Clr()
+	DisplayDoc(OEJTSTest::DOC)
+	Line()
 	
 	32.times do |int|
 		puts "Question #{int+1}".center WIDTH
@@ -170,11 +129,43 @@ if options[:oejts] then
 	puts("Test Complete".center WIDTH)
 	puts("Designation".center WIDTH,"-")
 	puts(desig.center WIDTH)
-	WIDTH.times { print "-" }; print "\n"
-	PadDoc(ParseVariants(desig,iev,snv,ftv,jpv)).each do |line|
-		puts line
+	Line()
+	DisplayDoc(OEJTSTest.parse_variants(desig,iev,snv,ftv,jpv))
+	Line()
+elsif options[:bigfivebroad50] then
+	currentTest = BigFiveBroad50Test.new
+	Clr()
+	DisplayDoc(BigFiveBroad50Test::DOC)
+	Line()
+	
+	50.times do  |int|
+		puts "Question #{int+1}".center WIDTH
+		currentTest.set_answer int,AskScale(currentTest.question int)
 	end
-	WIDTH.times { print "-" }; print "\n"
+	extraversion, agreeableness, conscientiousness, emotional_stability, intellect = currentTest.result
+	puts("Test Complete".center WIDTH)
+	Line()
+	DisplayDoc("Extraversion: #{extraversion} Agreeableness: #{agreeableness}\n" +
+		"Conscientiousness: #{conscientiousness} Emotional Stability: #{emotional_stability}\n" +
+		"Intellect: #{intellect}")
+	Line()
+elsif options[:bigfivebroad100] then
+	currentTest = BigFiveBroad100Test.new
+	Clr()
+	DisplayDoc(BigFiveBroad100Test::DOC)
+	Line()
+	
+	100.times do  |int|
+		puts "Question #{int+1}".center WIDTH
+		currentTest.set_answer int,AskScale(currentTest.question int)
+	end
+	extraversion, agreeableness, conscientiousness, emotional_stability, intellect = currentTest.result
+	puts("Test Complete".center WIDTH)
+	Line()
+	DisplayDoc("Extraversion: #{extraversion} Agreeableness: #{agreeableness}\n" +
+		"Conscientiousness: #{conscientiousness} Emotional Stability: #{emotional_stability}\n" +
+		"Intellect: #{intellect}")
+	Line()
 else
 	puts options[:helper]
 end

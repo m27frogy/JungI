@@ -75,21 +75,6 @@ END_FILE
 		"likes to know \"who?\", \"what?\", \"when?\"|likes to know \"why?\""
 	]
 	
-	def method_missing(name,*args)
-		if (name.length == 2 or name.length == 3) and name[0] == "Q" and name[1,name.length-1].to_i >= 1 and name[1,name.length-1].to_i <= self.class.const_get(:QUESTIONS).length then
-			return @answers[name[1,name.length-1].to_i-1]
-		else
-			super
-		end
-	end
-	
-	def randomize!()
-		32.times do |num|
-			self.set_answer(num,rand(1..5))
-		end
-		nil
-	end
-	
 	def result()
 		raise "Not ready yet!" if not self.finished?
 		ie = 30 - self.Q3 - self.Q7 - self.Q11 + self.Q15 - self.Q19 + self.Q23 + self.Q27 - self.Q31
@@ -125,5 +110,91 @@ END_FILE
 		jpv = (jp - 24).abs
 		
 		return desig, iev, snv, ftv, jpv
+	end
+	
+	def self.parse_variants(desig,iev,snv,ftv,jpv)
+		ending = ""
+		
+		if iev.between?(0,1) then
+			if desig[0] == "E" then
+				ending << "Lukewarm Extraversion, "
+			else
+				ending << "Lukewarm Intraversion, "
+			end
+		elsif iev < 4 then
+			if desig[0] == "E" then
+				ending << "Weak(#{iev}) Extraversion, "
+			else
+				ending << "Weak(#{iev}) Intraversion, "
+			end
+		else
+			if desig[0] == "E" then
+				ending << "Strong(#{iev}) Extraversion, "
+			else
+				ending << "Strong(#{iev}) Intraversion, "
+			end
+		end
+		
+		if snv.between?(0,1) then
+			if desig[1] == "S" then
+				ending << "Lukewarm Sensing\n"
+			else
+				ending << "Lukewarm Intuition\n"
+			end
+		elsif snv < 4 then
+			if desig[1] == "S" then
+				ending << "Weak(#{snv}) Sensing\n"
+			else
+				ending << "Weak(#{snv}) Intuition\n"
+			end
+		else
+			if desig[1] == "S" then
+				ending << "Strong(#{snv}) Sensing\n"
+			else
+				ending << "Strong(#{snv}) Intuition\n"
+			end
+		end
+		
+		if ftv.between?(0,1) then
+			if desig[2] == "F" then
+				ending << "Lukewarm Feeling, "
+			else
+				ending << "Lukewarm Thinking, "
+			end
+		elsif ftv < 4 then
+			if desig[2] == "F" then
+				ending << "Weak(#{ftv}) Feeling, "
+			else
+				ending << "Weak(#{ftv}) Thinking, "
+			end
+		else
+			if desig[2] == "F" then
+				ending << "Strong(#{ftv}) Feeling, "
+			else
+				ending << "Strong(#{ftv}) Thinking, "
+			end
+		end
+		
+		if jpv.between?(0,1) then
+			if desig[3] == "J" then
+				ending << "Lukewarm Judging"
+			else
+				ending << "Lukewarm Perceiving"
+			end
+		elsif jpv < 4 then
+			if desig[3] == "J" then
+				ending << "Weak(#{jpv}) Judging"
+			else
+				ending << "Weak(#{jpv}) Perceiving"
+			end
+		else
+			if desig[3] == "J" then
+				ending << "Strong(#{jpv}) Judging"
+			else
+				ending << "Strong(#{jpv}) Perceiving"
+			end
+		end
+		
+		return ending
 	end
 end
