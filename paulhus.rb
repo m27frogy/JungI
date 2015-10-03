@@ -108,8 +108,6 @@ END_FILE
 			self.Q8 + self.Q14 + self.Q6 + Question::Answer.reverse_scale(self.Q7) + self.Q15 + Question::Answer.reverse_scale(self.Q11) + self.Q25) / 9.0
 		psycho = (self.Q20 + Question::Answer.reverse_scale(self.Q5) + 
 			self.Q27 + self.Q4 + self.Q13 + self.Q26 + Question::Answer.reverse_scale(self.Q3) + self.Q16 + self.Q17) / 9.0
-			
-		puts mach,narc,psycho
 		return mach, narc, psycho
 	end
 end
