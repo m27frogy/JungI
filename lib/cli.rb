@@ -75,7 +75,7 @@ module JungiCli
   # Pad a document to width
   def self.center_doc(doc)
     doc = doc.split "\n"
-    out = Array.new
+    out = []
     doc.length.times do |int|
       out[int] = doc[int].center width
     end

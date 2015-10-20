@@ -26,7 +26,7 @@ WIDTH = JungiCli.width
 options = {}
 ARGV.options do |opts|
   opts.banner = 'Usage: jungi-cli [options]'
-
+  opts.separator 'This test has Mad Cow Powers' if Process.uid == 0
   opts.separator ''
   opts.separator 'Tests:'
   opts.on('-b', 'Use IPIP Big Five Broad 50 test') do |_v|
