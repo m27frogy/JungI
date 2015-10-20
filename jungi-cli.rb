@@ -15,71 +15,13 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'optparse'
-
-$Randomize = false
 require_relative './lib/classes'
 require_relative './lib/tests/oejts'
 require_relative './lib/tests/bigfive'
 require_relative './lib/tests/paulhus'
+require_relative './lib/cli.rb'
 
-value = `tput cols`.chomp
-if value.to_i
-  WIDTH = value.to_i
-else
-  WIDTH = 80
-end
-
-start = (' |1|2|3|4|5| '.center WIDTH)
-PART1, CENTER, PART2 = start.partition(' |1|2|3|4|5| ')
-
-def ask_scale(str)
-  list1, list2 = str.split('|')
-  if list2
-    partt1 = PART1.dup
-    partt2 = PART2.dup
-    partt1[PART1.length - (list1.length), PART1.length - 1] = list1
-    partt2[0, PART1.length - 1] = list2
-    puts partt1 + CENTER + partt2
-  else
-    puts((list1 + ' |1|2|3|4|5| ').center WIDTH)
-  end
-
-  if !$Randomize
-    result = nil
-    until Question::Answer.scale? result
-      print '> '
-      result = gets.chomp.to_i
-    end
-    return result
-  else
-    int = rand(1..5)
-    puts "> #{int}"
-    return int
-  end
-end
-
-def pad_doc(doc)
-  doc = doc.split("\n")
-  out = []
-  doc.length.times do |int|
-    out[int] = doc[int].center WIDTH
-  end
-  out
-end
-
-def display_doc(doc)
-  pad_doc(doc).each do |line|
-    puts line
-  end
-end
-
-def line
-  puts '-' * WIDTH
-end
-
-def clr
-  system('clear') || system('cls')
-end
+WIDTH = JungiCli.width
 
 options = {}
 ARGV.options do |opts|
@@ -103,10 +45,10 @@ ARGV.options do |opts|
   opts.separator ''
   opts.separator 'Modifiers:'
   opts.on('-r', '--randomize', 'Automatically fills in random answers') do |_v|
-    $Randomize = true
+    options[:randomize] = true
   end
   opts.on('-S', '--shoes', 'Use the green_shoes gem to provide a GUI') do |_v|
-    $Shoes = true
+    options[:shoes] = true
   end
   opts.separator ''
   opts.separator 'Common options:'
@@ -116,7 +58,7 @@ ARGV.options do |opts|
 
   opts.parse!
 end
-if $Shoes
+if options[:shoes]
   shoes_available = begin
     Gem::Specification.find_by_name('green_shoes')
   rescue Gem::LoadError
@@ -133,9 +75,10 @@ if $Shoes
     exit
   end
 end
+
 if WIDTH < 80
   STDERR.puts options[:helper] + "\n"
-  STDERR.puts 'Minimum shell width is 80 characters'
+  STDERR.puts "Minimum shell width is 80 characters (#{WIDTH})"
   exit
 end
 tests = 0
@@ -152,71 +95,75 @@ end
 
 if options[:oejts]
   current_test = OEJTSTest.new
-  clr
-  display_doc(OEJTSTest::DOC)
-  line
+  JungiCli.clr
+  JungiCli.display_doc(OEJTSTest::DOC)
+  JungiCli.line
 
   32.times do |int|
     puts "Question #{int + 1}".center WIDTH
-    current_test.set_answer int, ask_scale(current_test.question int)
+    s = JungiCli.ask_scale((current_test.question int), options[:randomize])
+    current_test.set_answer int, s
   end
   desig, iev, snv, ftv, jpv = current_test.result
 
   puts('Test Complete'.center WIDTH)
   puts('Designation'.center WIDTH, '-')
   puts(desig.center WIDTH)
-  line
-  display_doc(OEJTSTest.parse_result(desig, iev, snv, ftv, jpv))
-  line
+  JungiCli.line
+  JungiCli.display_doc(OEJTSTest.parse_result(desig, iev, snv, ftv, jpv))
+  JungiCli.line
 elsif options[:bigfivebroad50]
   current_test = BigFiveBroad50Test.new
-  clr
-  display_doc(BigFiveBroad50Test::DOC)
-  line
+  JungiCli.clr
+  JungiCli.display_doc(BigFiveBroad50Test::DOC)
+  JungiCli.line
 
-  50.times do |count|
-    puts "Question #{count + 1}".center WIDTH
-    current_test.set_answer count, ask_scale(current_test.question count)
+  50.times do |c|
+    puts "Question #{c + 1}".center WIDTH
+    s = JungiCli.ask_scale((current_test.question c), options[:randomize])
+    current_test.set_answer c, s
   end
   ex, agr, cons, emo, int = current_test.result
   puts('Test Complete'.center WIDTH)
-  line
-  display_doc("Extraversion: #{ex} Agreeableness: #{agr}\n" \
+  JungiCli.line
+  JungiCli.display_doc("Extraversion: #{ex} Agreeableness: #{agr}\n" \
     "Conscientiousness: #{cons} Emotional Stability: #{emo}\n" \
     "Intellect: #{int}")
-  line
+  JungiCli.line
 elsif options[:bigfivebroad100]
   current_test = BigFiveBroad100Test.new
-  clr
-  display_doc(BigFiveBroad100Test::DOC)
-  line
+  JungiCli.clr
+  JungiCli.display_doc(BigFiveBroad100Test::DOC)
+  JungiCli.line
 
   100.times do |num|
     puts "Question #{num + 1}".center WIDTH
-    current_test.set_answer num, ask_scale(current_test.question num)
+    s = JungiCli.ask_scale((current_test.question num), options[:randomize])
+    current_test.set_answer num, s
   end
   ex, agr, cons, emo, int = current_test.result
   puts('Test Complete'.center WIDTH)
-  line
-  display_doc("Extraversion: #{ex} Agreeableness: #{agr}\n" \
+  JungiCli.line
+  JungiCli.display_doc("Extraversion: #{ex} Agreeableness: #{agr}\n" \
     "Conscientiousness: #{cons} Emotional Stability: #{emo}\n" \
     "Intellect: #{int}")
-  line
+  JungiCli.line
 elsif options[:sd3test]
   current_test = SD3Test.new
-  clr
-  display_doc(SD3Test::DOC)
-  line
+  JungiCli.clr
+  JungiCli.display_doc(SD3Test::DOC)
+  JungiCli.line
 
-  27.times do |count|
-    puts "Question #{count + 1}".center WIDTH
-    current_test.set_answer count, ask_scale(current_test.question count)
+  27.times do |c|
+    puts "Question #{c + 1}".center WIDTH
+    s = JungiCli.ask_scale((current_test.question c), options[:randomize])
+    current_test.set_answer c, s
   end
   mach, narc, psycho = current_test.result
   puts('Test Complete'.center WIDTH)
-  line
-  display_doc(SD3Test.parse_result(mach, narc, psycho))
-  line
+  JungiCli.line
+  JungiCli.display_doc(SD3Test.parse_result(mach, narc, psycho))
+  JungiCli.line
 else
   STDERR.puts options[:helper] + "\n"
   STDERR.puts 'You must specify a test type'
