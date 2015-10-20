@@ -29,20 +29,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *	Open Extended Jungian Types (OEJTS) 1.2
 *	IPIP Big-Five Broad Domain 50 Questions
 *	IPIP Big-Five Broad Domain 100 Questions
+* Delroy L. Paulhus' Short Dark Triad (SD3)
 
 ## Usage
  ```
-Usage: jungi-cli [options]
+ Usage: jungi-cli [options]
 
-Tests:
-    -b                               Use IPIP Big Five Broad 50 test
-    -B                               Use IPIP Big Five Broad 100 test
-    -j                               Use OEJTS 1.2 test
-    -s                               Use Delroy L. Paulhus' SD3
+ Tests:
+     -b, --big                        Use IPIP Big Five Broad 50 test
+     -B, --bigger                     Use IPIP Big Five Broad 100 test
+     -j, --jungian                    Use OEJTS 1.2 test
+     -t, --triad                      Use Delroy L. Paulhus' SD3
 
-Modifiers:
-    -r, --randomize                  Automatically fills in random answers
+ Modifiers:
+     -r, --randomize                  Automatically fills in random answers
 
-Common options:
-    -h, --help                       Display this help and exit
+ Common options:
+     -h, --help                       Display this help and exit
 ```

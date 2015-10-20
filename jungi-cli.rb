@@ -29,16 +29,16 @@ ARGV.options do |opts|
   opts.separator 'This test has Mad Cow Powers' if Process.uid == 0
   opts.separator ''
   opts.separator 'Tests:'
-  opts.on('-b', 'Use IPIP Big Five Broad 50 test') do |_v|
+  opts.on('-b', '--big', 'Use IPIP Big Five Broad 50 test') do |_v|
     options[:bigfivebroad50] = true
   end
-  opts.on('-B', 'Use IPIP Big Five Broad 100 test') do |_v|
+  opts.on('-B', '--bigger', 'Use IPIP Big Five Broad 100 test') do |_v|
     options[:bigfivebroad100] = true
   end
-  opts.on('-j', 'Use OEJTS 1.2 test') do |_v|
+  opts.on('-j', '--jungian', 'Use OEJTS 1.2 test') do |_v|
     options[:oejts] = true
   end
-  opts.on('-s', "Use Delroy L. Paulhus' SD3") do |_v|
+  opts.on('-t', '--triad', "Use Delroy L. Paulhus' SD3") do |_v|
     options[:sd3test] = true
   end
 
@@ -47,7 +47,7 @@ ARGV.options do |opts|
   opts.on('-r', '--randomize', 'Automatically fills in random answers') do |_v|
     options[:randomize] = true
   end
-  opts.on('-S', '--shoes', 'Use the green_shoes gem to provide a GUI') do |_v|
+  opts.on('-s', '--shoes', 'Use the green_shoes gem to provide a GUI') do |_v|
     options[:shoes] = true
   end
   opts.separator ''
