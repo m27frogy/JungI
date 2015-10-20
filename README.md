@@ -32,12 +32,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Usage
  ```
- Usage: jungi-cli [options]
+Usage: jungi-cli [options]
 
 Tests:
-    -j                               Use OEJTS 1.2 test
     -b                               Use IPIP Big Five Broad 50 test
     -B                               Use IPIP Big Five Broad 100 test
+    -j                               Use OEJTS 1.2 test
+    -s                               Use Delroy L. Paulhus' SD3
 
 Modifiers:
     -r, --randomize                  Automatically fills in random answers
