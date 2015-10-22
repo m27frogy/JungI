@@ -21,7 +21,11 @@
 #
 # 	https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-require_relative '../classes'
+begin
+  require_relative './classes'
+rescue LoadError
+  require 'jungi/classes'
+end
 
 # Implementation of OEJTS
 class OEJTSTest < ScaleTest

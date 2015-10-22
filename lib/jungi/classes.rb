@@ -78,6 +78,16 @@ class Test
     @answers = []
   end
 
+  # Enable the use of self.Q<number> for easy implementation of tests
+  def method_missing(name, *args)
+    section = name[1..(name.length - 1)]
+    if name[0] == 'Q' && self.out_of_index?(section.to_i - 1)
+      return @answers[section.to_i - 1]
+    else
+      super
+    end
+  end
+
   # Check for out of index
   def out_of_index?(index, truism = false)
     if (index) > (self.class.const_get(:QUESTIONS).length - 1)
@@ -166,16 +176,6 @@ class ScaleTest < Test
       set_answer(num, rand(1..5))
     end
     nil
-  end
-
-  # Enable the use of self.Q<number> for easy implementation of tests
-  def method_missing(name, *args)
-    section = name[1..(name.length - 1)]
-    if name[0] == 'Q' && self.out_of_index?(section.to_i - 1)
-      return @answers[section.to_i - 1]
-    else
-      super
-    end
   end
 
   # Default results for scale test

@@ -32,7 +32,11 @@
 # 	the Development of Advanced Measures of Personality Traits and
 # 	Other Individual Differences (http://ipip.ori.org/). Internet Web Site.
 
-require_relative '../classes'
+begin
+  require_relative './classes'
+rescue LoadError
+  require 'jungi/classes'
+end
 
 # Implementation of BigFive Broad 50 Q
 class BigFiveBroad50Test < ScaleTest

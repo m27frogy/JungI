@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+# coding: utf-8
+
 #     JungI - A simple program for taking open source personality tests.
 #     Copyright (C) 2015  Mfrogy Starmade
 #
@@ -15,11 +18,19 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'optparse'
-require_relative './lib/classes'
-require_relative './lib/tests/oejts'
-require_relative './lib/tests/bigfive'
-require_relative './lib/tests/paulhus'
-require_relative './lib/cli.rb'
+begin
+  require_relative '../lib/jungi/classes'
+  require_relative '../lib/jungi/oejts'
+  require_relative '../lib/jungi/bigfive'
+  require_relative '../lib/jungi/paulhus'
+  require_relative '../lib/jungi/cli.rb'
+rescue LoadError
+  require 'jungi/classes'
+  require 'jungi/oejts'
+  require 'jungi/bigfive'
+  require 'jungi/paulhus'
+  require 'jungi/cli'
+end
 
 WIDTH = JungiCli.width
 
@@ -47,9 +58,6 @@ ARGV.options do |opts|
   opts.on('-r', '--randomize', 'Automatically fills in random answers') do |_v|
     options[:randomize] = true
   end
-  opts.on('-s', '--shoes', 'Use the green_shoes gem to provide a GUI') do |_v|
-    options[:shoes] = true
-  end
   opts.separator ''
   opts.separator 'Common options:'
   opts.on_tail('-h', '--help', 'Display this help and exit')
@@ -57,23 +65,6 @@ ARGV.options do |opts|
   options[:helper] = opts.help
 
   opts.parse!
-end
-if options[:shoes]
-  shoes_available = begin
-    Gem::Specification.find_by_name('green_shoes')
-  rescue Gem::LoadError
-    false
-  rescue
-    Gem.available?('green_shoes')
-  end
-
-  if shoes_available
-    require 'green_shoes'
-  else
-    STDERR.puts options[:helper] + "\n"
-    STDERR.puts 'The -s/--shoes option requires the green_shoes gem'
-    exit
-  end
 end
 
 if WIDTH < 80

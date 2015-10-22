@@ -18,7 +18,11 @@
 # 	For more information, see this page:
 # 	<http://www2.psych.ubc.ca/~dpaulhus/Paulhus_measures/>
 
-require_relative '../classes'
+begin
+  require_relative './classes'
+rescue LoadError
+  require 'jungi/classes'
+end
 
 # Short Dark Triad Test
 class SD3Test < ScaleTest
