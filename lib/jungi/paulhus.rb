@@ -142,7 +142,7 @@ spheres of control.  Answer each question with
 a "1" for Completely Disagree, "2" for Strongly
 Disagree, "3" for Disagree, "4" for Neither
 Agree nor Disagree, "5" for Agree, "6" for
-Strongly Disagree, and "7" for Completely Agree.
+Strongly Agree, and "7" for Completely Agree.
 Press <ENTER> after you've made your choice.
 END_FILE
   QUESTIONS = [

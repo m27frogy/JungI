@@ -16,14 +16,14 @@
 
 Gem::Specification.new do |s|
   s.name = 'jungi'
-  s.version = '0.0.3'
+  s.version = '0.0.4'
 
   s.required_rubygems_version = Gem::Requirement.new('>= 0') if s.respond_to? :required_rubygems_version=
   s.authors = ['MFrogy Starmade']
   s.email = 'm27frogy.roblox@gmail.com'
   s.date = '2015-10-22'
   s.description = 'A simple program for taking open source personality tests.'
-  s.summary = 'Added Spheres of Control Version 3.'
+  s.summary = 'Small fixes.'
   s.homepage = 'https://github.com/m27frogy/JungI'
   s.license = 'GPL3'
 
