@@ -32,8 +32,6 @@ rescue LoadError
   require 'jungi/cli'
 end
 
-WIDTH = JungiCli.width
-
 options = {}
 ARGV.options do |opts|
   opts.banner = 'Usage: jungi-cli [options]'
@@ -45,6 +43,9 @@ ARGV.options do |opts|
   end
   opts.on('-B', '--bigger', 'Use IPIP Big Five Broad 100 test') do |_v|
     options[:bigfivebroad100] = true
+  end
+  opts.on('-c', '--control', "Use Delroy L. Paulhus' SOC3") do |_v|
+    options[:soc3test] = true
   end
   opts.on('-j', '--jungian', 'Use OEJTS 1.2 test') do |_v|
     options[:oejts] = true
@@ -67,7 +68,7 @@ ARGV.options do |opts|
   opts.parse!
 end
 
-if WIDTH < 80
+if JungiCli.width < 80
   STDERR.puts options[:helper] + "\n"
   STDERR.puts "Minimum shell width is 80 characters (#{WIDTH})"
   exit
@@ -77,6 +78,7 @@ tests += 1 if options[:bigfivebroad50]
 tests += 1 if options[:bigfivebroad100]
 tests += 1 if options[:oejts]
 tests += 1 if options[:sd3test]
+tests += 1 if options[:soc3test]
 
 if tests > 1
   STDERR.puts options[:helper] + "\n"
@@ -84,6 +86,7 @@ if tests > 1
   exit
 end
 
+# -----------------------------------------------------------------------------
 if options[:oejts]
   current_test = OEJTSTest.new
   JungiCli.clr
@@ -91,15 +94,15 @@ if options[:oejts]
   JungiCli.line
 
   32.times do |int|
-    puts "Question #{int + 1}".center WIDTH
+    puts "Question #{int + 1}".center JungiCli.width
     s = JungiCli.ask_scale((current_test.question int), options[:randomize])
     current_test.set_answer int, s
   end
   desig, iev, snv, ftv, jpv = current_test.result
 
-  puts('Test Complete'.center WIDTH)
-  puts('Designation'.center WIDTH, '-')
-  puts(desig.center WIDTH)
+  puts('Test Complete'.center JungiCli.width)
+  puts('Designation'.center JungiCli.width, '-')
+  puts(desig.center JungiCli.width)
   JungiCli.line
   JungiCli.display_doc(OEJTSTest.parse_result(desig, iev, snv, ftv, jpv))
   JungiCli.line
@@ -110,17 +113,18 @@ elsif options[:bigfivebroad50]
   JungiCli.line
 
   50.times do |c|
-    puts "Question #{c + 1}".center WIDTH
+    puts "Question #{c + 1}".center JungiCli.width
     s = JungiCli.ask_scale((current_test.question c), options[:randomize])
     current_test.set_answer c, s
   end
   ex, agr, cons, emo, int = current_test.result
-  puts('Test Complete'.center WIDTH)
+  puts('Test Complete'.center JungiCli.width)
   JungiCli.line
   JungiCli.display_doc("Extraversion: #{ex} Agreeableness: #{agr}\n" \
     "Conscientiousness: #{cons} Emotional Stability: #{emo}\n" \
     "Intellect: #{int}")
   JungiCli.line
+# -----------------------------------------------------------------------------
 elsif options[:bigfivebroad100]
   current_test = BigFiveBroad100Test.new
   JungiCli.clr
@@ -128,17 +132,18 @@ elsif options[:bigfivebroad100]
   JungiCli.line
 
   100.times do |num|
-    puts "Question #{num + 1}".center WIDTH
+    puts "Question #{num + 1}".center JungiCli.width
     s = JungiCli.ask_scale((current_test.question num), options[:randomize])
     current_test.set_answer num, s
   end
   ex, agr, cons, emo, int = current_test.result
-  puts('Test Complete'.center WIDTH)
+  puts('Test Complete'.center JungiCli.width)
   JungiCli.line
   JungiCli.display_doc("Extraversion: #{ex} Agreeableness: #{agr}\n" \
     "Conscientiousness: #{cons} Emotional Stability: #{emo}\n" \
     "Intellect: #{int}")
   JungiCli.line
+# -----------------------------------------------------------------------------
 elsif options[:sd3test]
   current_test = SD3Test.new
   JungiCli.clr
@@ -146,15 +151,33 @@ elsif options[:sd3test]
   JungiCli.line
 
   27.times do |c|
-    puts "Question #{c + 1}".center WIDTH
+    puts "Question #{c + 1}".center JungiCli.width
     s = JungiCli.ask_scale((current_test.question c), options[:randomize])
     current_test.set_answer c, s
   end
   mach, narc, psycho = current_test.result
-  puts('Test Complete'.center WIDTH)
+  puts('Test Complete'.center JungiCli.width)
   JungiCli.line
   JungiCli.display_doc(SD3Test.parse_result(mach, narc, psycho))
   JungiCli.line
+# -----------------------------------------------------------------------------
+elsif options[:soc3test]
+  current_test = SOC3Test.new
+  JungiCli.clr
+  JungiCli.display_doc(SOC3Test::DOC)
+  JungiCli.line
+
+  30.times do |c|
+    puts "Question #{c + 1}".center JungiCli.width
+    s = JungiCli.ask_scale7((current_test.question c), options[:randomize])
+    current_test.set_answer c, s
+  end
+  pers, inter, socio = current_test.result
+  puts('Test Complete'.center JungiCli.width)
+  JungiCli.line
+  JungiCli.display_doc(SOC3Test.parse_result(pers, inter, socio))
+  JungiCli.line
+# -----------------------------------------------------------------------------
 else
   STDERR.puts options[:helper] + "\n"
   STDERR.puts 'You must specify a test type'

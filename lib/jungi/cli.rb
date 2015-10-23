@@ -31,6 +31,16 @@ module JungiCli
     80
   end
 
+  # Ask for integer
+  def self.ask_integer(prompt)
+    result = nil
+    until yield result
+      print prompt
+      result = gets.chomp.to_i
+    end
+    result
+  end
+
   # Fetch prototype objects
   def self.scale_proto
     start = (' |1|2|3|4|5| '.center width)
@@ -44,34 +54,87 @@ module JungiCli
       s1, c1, s2 = scale_proto
       s1[s1.length - p1.length, s1.length - 1] = p1
       s2[0, p2.length - 1] = p2
-      s1 + c1 + s2
+      res = s1 + c1 + s2
+      if res.length > width + 1
+        res = (p1 + ' |1|2|3|4|5| ' + p2).center width
+        if res.length > width
+          return "#{p1}\n |1|2|3|4|5| \n#{p2}"
+        else
+          return res
+        end
+      else
+        return res
+      end
     else
-      (p1 + ' |1|2|3|4|5| ').center WIDTH
+      "#{p1}\n |1|2|3|4|5| "
     end
-  end
-
-  # Ask for integer
-  def self.ask_integer(prompt)
-    result = nil
-    until yield result
-      print prompt
-      result = gets.chomp.to_i
-    end
-    result
   end
 
   # Nicely ask a scale
   def self.ask_scale(scale, randomize = false)
-    puts parse_scale scale
+    blah = parse_scale scale
+    if /\n/.match blah
+      display_doc blah
+    else
+      puts blah
+    end
 
     if randomize
       int = rand(1..5)
       puts "> #{int}"
       int
-
     else
       ask_integer '> ' do |r|
         Question::Answer.scale? r
+      end
+    end
+  end
+
+  # Fetch prototype objects7
+  def self.scale7_proto
+    start = (' |1|2|3|4|5|6|7| '.center width)
+    start.partition(' |1|2|3|4|5|6|7| ')
+  end
+
+  # Handle question via scale7
+  def self.parse_scale7(scale)
+    p1, p2 = scale.split '|'
+    if p2
+      s1, c1, s2 = scale7_proto
+      s1[s1.length - p1.length, s1.length - 1] = p1
+      s2[0, p2.length - 1] = p2
+      res = s1 + c1 + s2
+      if res.length > width + 1
+        res = (p1 + ' |1|2|3|4|5|6|7| ' + p2).center width
+        if res.length > width
+          return "#{p1}\n |1|2|3|4|5|6|7| \n#{p2}"
+        else
+          return res
+        end
+      else
+        return res
+      end
+    else
+      "#{p1}\n |1|2|3|4|5|6|7| "
+    end
+  end
+
+  # Nicely ask a scale7
+  def self.ask_scale7(scale, randomize = false)
+    blah = parse_scale7 scale
+    if /\n/.match blah
+      display_doc blah
+    else
+      puts blah
+    end
+
+    if randomize
+      int = rand(1..7)
+      puts "> #{int}"
+      int
+    else
+      ask_integer '> ' do |r|
+        Question::Answer.scale7? r
       end
     end
   end

@@ -146,7 +146,7 @@ END_FILE
     if ftv.between?(0, 1)
       "Lukewarm #{word}, "
     elsif ftv < 4
-      "Weak(#{ftv}) #{word} "
+      "Weak(#{ftv}) #{word}, "
     else
       "Strong(#{ftv}) #{word}, "
     end

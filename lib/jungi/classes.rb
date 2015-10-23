@@ -20,6 +20,7 @@ module Question
   module Type
     YESORNO = :yn
     SCALE = :scale
+    SCALE7 = :scale7
   end
 
   # Question Answer Module
@@ -38,7 +39,7 @@ module Question
 
     # Check value for scale value
     def self.scale?(value)
-      if value == 1 || value == 2 || value == 3 || value == 4 || value == 5
+      if (value.instance_of? Fixnum) && value.between?(1, 5)
         return true
       else
         return false
@@ -53,12 +54,31 @@ module Question
       [5, 4, 3, 2, 1].to_a[value - 1]
     end
 
+    # Check value for scale7 value
+    def self.scale7?(value)
+      if (value.instance_of? Fixnum) && value.between?(1, 7)
+        return true
+      else
+        return false
+      end
+    end
+
+    # Reverse scale7 value
+    def self.reverse_scale7(value)
+      unless Question::Answer.scale7?(value)
+        fail "#{type} is not a proper scale7!"
+      end
+      [7, 6, 5, 4, 3, 2, 1].to_a[value - 1]
+    end
+
     # Checks value follows type
     def self.follows_type?(type, value)
       if type == Question::Type::YESORNO
         return Question::Answer.yes_or_no?(value)
       elsif type == Question::Type::SCALE
         return Question::Answer.scale?(value)
+      elsif type == Question::Type::SCALE7
+        return Question::Answer.scale7?(value)
       else
         fail "#{type} is an invalid question type!"
       end
@@ -189,5 +209,23 @@ class ScaleTest < Test
     else
       "You're hard to figure out."
     end
+  end
+end
+
+# Final Scale7 Test Class
+class Scale7Test < ScaleTest
+  # Set question answer to value
+  def set_answer(index, value)
+    self.out_of_index? index
+    fail "#{value} is not a scale!" unless Question::Answer.scale7?(value)
+    @answers[index] = value
+  end
+
+  # Randomize the answers to a scale test
+  def randomize!
+    self.class.const_get(:QUESTIONS).length.times do |num|
+      set_answer(num, rand(1..7))
+    end
+    nil
   end
 end

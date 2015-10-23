@@ -118,13 +118,118 @@ END_FILE
 
   def result
     mach = (self.Q24 + self.Q19 + self.Q1 + self.Q2 + self.Q10 +
-      self.Q21 + self.Q12 + self.Q22 + self.Q23) / 9.0
+           self.Q21 + self.Q12 + self.Q22 + self.Q23) / 9.0
     narc = (self.Q9 + Question::Answer.reverse_scale(self.Q18) +
-      self.Q8 + self.Q14 + self.Q6 + Question::Answer.reverse_scale(self.Q7) +
-      self.Q15 + Question::Answer.reverse_scale(self.Q11) + self.Q25) / 9.0
+           self.Q8 + self.Q14 + self.Q6 +
+           Question::Answer.reverse_scale(self.Q7) +
+           self.Q15 + Question::Answer.reverse_scale(self.Q11) + self.Q25) / 9.0
     psycho = (self.Q20 + Question::Answer.reverse_scale(self.Q5) +
-      self.Q27 + self.Q4 + self.Q13 + self.Q26 +
-      Question::Answer.reverse_scale(self.Q3) + self.Q16 + self.Q17) / 9.0
+           self.Q27 + self.Q4 + self.Q13 + self.Q26 +
+           Question::Answer.reverse_scale(self.Q3) + self.Q16 + self.Q17) / 9.0
     [mach, narc, psycho]
+  end
+end
+
+# Spheres of Control Version 3
+class SOC3Test < Scale7Test
+  DOC = <<END_FILE
+Spheres of Control Version 3
+-
+Delroy L. Paulhus
+
+This test evaluates how you perceive certain
+spheres of control.  Answer each question with
+a "1" for Completely Disagree, "2" for Strongly
+Disagree, "3" for Disagree, "4" for Neither
+Agree nor Disagree, "5" for Agree, "6" for
+Strongly Disagree, and "7" for Completely Agree.
+Press <ENTER> after you've made your choice.
+END_FILE
+  QUESTIONS = [
+    'I can usually achieve what I want if I work hard for it.',
+    "In my personal relationships, the other person usually has more\n"\
+    'control than I do.',
+    "By taking an active part in political and social affairs, we the\n"\
+    ' people can influence world events.',
+    'Once I make plans, I am almost certain to make them work.',
+    'I have no trouble making and keeping friends.',
+    'The average citizen can have an influence on government decisions.',
+    'I prefer games involving some luck over games requiring pure skill.',
+    'I\'m not good at guiding the course of a conversation with several'\
+    ' others.',
+    "It is difficult for us to have much control over the things\n"\
+    'politicians do in office.',
+    'I can learn almost anything if I set my mind to it.',
+    "I can usually develop a personal relationship with someone I find\n"\
+    'appealing.',
+    "Bad economic conditions are caused by world events that are beyond\n"\
+    'our control.',
+    'My major accomplishments are entirely due to my hard work and ability.',
+    'I can usually steer a conversation toward the topics I want to talk'\
+    ' about.',
+    'With enough effort we can wipe out political corruption.',
+    "I usually do not set goals because I have a hard time following\n"\
+    'through on them.',
+    "When I need assistance with something, I often find it difficult to\n"\
+    'get others to help.',
+    "One of the major reasons we have wars is because people don\'t take\n"\
+    'enough interest in politics.',
+    'Bad luck has sometimes prevented me from achieving things.',
+    'If there\'s someone I want to meet, I can usually arrange it.',
+    "There is nothing we, as consumers, can do to keep the cost of living\n"\
+    'from going higher.',
+    'Almost anything is possible for me if I really want it.',
+    'I often find it hard to get my point of view across to others.',
+    'It is impossible to have any real influence over what big businesses do.',
+    'Most of what happens in my career is beyond my control.',
+    'In attempting to smooth over a disagreement, I sometimes make it worse.',
+    "I prefer to concentrate my energy on other things rather than on\n"\
+    'solving the world\'s problems.',
+    "I find it pointless to keep working on something that\'s too diffic"\
+    'ult for me.',
+    'I find it easy to play an important part in most group situations.',
+    "In the long run, we the voters are responsible for bad government\n"\
+    'on a national as well as a local level.'
+  ]
+
+  def self.parse_pers(pers)
+    "Personal Control #{pers}, "
+  end
+
+  def self.parse_inter(inter)
+    "Interpersonal Control #{inter}, "
+  end
+
+  def self.parse_socio(socio)
+    "Socio-Political Control #{socio}"
+  end
+
+  def self.parse_result(pers, inter, socio)
+    pers = (pers.round 1)
+    inter = (inter.round 1)
+    socio = (socio.round 1)
+    parse_pers(pers) << parse_inter(inter) << parse_socio(socio)
+  end
+
+  def result
+    pers = (self.Q1 + self.Q4 + self.Q10 + self.Q13 +
+           self.Q22 + Question::Answer.reverse_scale7(self.Q7) +
+           Question::Answer.reverse_scale7(self.Q16) +
+           Question::Answer.reverse_scale7(self.Q19) +
+           Question::Answer.reverse_scale7(self.Q25) +
+           Question::Answer.reverse_scale7(self.Q28)) / 10.0
+    inter = (self.Q5 + self.Q11 + self.Q14 + self.Q20 +
+            self.Q29 + Question::Answer.reverse_scale7(self.Q2) +
+            Question::Answer.reverse_scale7(self.Q8) +
+            Question::Answer.reverse_scale7(self.Q17) +
+            Question::Answer.reverse_scale7(self.Q23) +
+            Question::Answer.reverse_scale7(self.Q26)) / 10.0
+    socio = (self.Q3 + self.Q6 + self.Q15 + self.Q18 +
+            self.Q30 + Question::Answer.reverse_scale7(self.Q9) +
+            Question::Answer.reverse_scale7(self.Q12) +
+            Question::Answer.reverse_scale7(self.Q21) +
+            Question::Answer.reverse_scale7(self.Q24) +
+            Question::Answer.reverse_scale7(self.Q27)) / 10.0
+    [pers, inter, socio]
   end
 end
